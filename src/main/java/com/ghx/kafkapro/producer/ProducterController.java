@@ -23,10 +23,9 @@ public class ProducterController {
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     @RequestMapping("/send/message")
-    public String send(String msg) {
+    public String send(String topic, String msg) {
         // 使用kafka模板发送信息
-        ListenableFuture<SendResult<String, Object>> test = kafkaTemplate.send("test", msg);
-
+        ListenableFuture<SendResult<String, Object>> test = kafkaTemplate.send(topic, msg);
         return "success";
     }
 
