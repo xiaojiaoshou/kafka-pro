@@ -21,7 +21,7 @@ public class ConsumerListener {
      */
     @KafkaListener(topics = "test")
     public void listen (ConsumerRecord<?, ?> record){
-        System.out.printf("消费端接收到消序：topic: %s, offset: %d, value ：%s ", record.topic(), record.offset(), record.value());
+        System.out.printf("消费端接收到消序：topic: %s, offset: %d, value ：%s \n", record.topic(), record.offset(), record.value());
     }
 
 

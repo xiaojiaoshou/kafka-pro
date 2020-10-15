@@ -3,10 +3,40 @@ server:
 spring:
   kafka:
     bootstrap-servers: 192.168.144.128:9092,192.168.144.130:9092,192.168.144.131:9092  #指定kafka server的地址，集群配多个，中间，逗号隔开
-    producer: #生产端配置
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer: #消费端配置
-        enable-auto-commit: true  #消息是否自动提交，true 代表自动提交，false 代表手动提交
-        group-id: kafka # 群组ID
-#        auto-offset-reset: earliest #启动接收没有接收到的数据
+    #生产端配置
+    producer:
+      #客户端id 用于服务器日志记录
+      client-id: 100
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        #  0：broker 一接收到还没有写入磁盘就已经返回，当 broker 故障时有可能丢失数据；
+        #  1： producer 等待 broker 的 ack， partition 的 leader 落盘成功后返回 ack，如果在 follower同步成功之前 leader 故障，那么将会丢失数据；
+        #  -1（all） ： producer 等待 broker 的 ack， partition 的 leader 和 follower 全部落盘成功后才
+        #  返回 ack。但是如果在 follower 同步完成后， broker 发送 ack 之前， leader 发生故障，那么会
+        #   造成数据重复。
+      acks: -1  #消息不丢失最大努力保证
+      #只有数据积累到 batch.size字节之后， sender 才会发送数据
+      #batch-size:
+      # 失败后从试次数
+      retries: 4
+
+    #消费端配置
+    consumer:
+      #消费端客户端id 用于服务器日志记录
+      client-id: 100
+      group-id: user-group # 群组ID
+      #消息是否自动提交，true 代表自动提交，false 代表关闭自动提交
+      enable-auto-commit: true
+      #自动提交的间隔时间，当前仅当在enable-auto-commit: true 的情况下生效
+      auto-commit-interval: 1000ms
+        #auto-offset-reset: 生效条件换了消费者组的时候 或者 offset 已经被删掉了的失败
+        #该参数有两个参数可选：earliest和latest 而默认值是lastest.
+       # earliest 从最早开始消费.lastest 从最大提交的offset开始消费
+      auto-offset-reset: earliest
+      # 一次请求服务器等等的最大时长fetch-max-wait 与fetch-min-size二者满足一个即可返回.
+      #fetch-max-wait:
+      #拉取满足的最小数量
+      #fetch-min-size:
+      #一次拉取返回的最大数量
+      #max-poll-records:
+
