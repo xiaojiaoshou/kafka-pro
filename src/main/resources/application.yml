@@ -1,0 +1,12 @@
+server:
+  port: 8090
+spring:
+  kafka:
+    bootstrap-servers: 192.168.144.128:9092,192.168.144.130:9092,192.168.144.131:9092  #指定kafka server的地址，集群配多个，中间，逗号隔开
+    producer: #生产端配置
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer: #消费端配置
+        enable-auto-commit: true  #消息是否自动提交，true 代表自动提交，false 代表手动提交
+        group-id: kafka # 群组ID
+#        auto-offset-reset: earliest #启动接收没有接收到的数据
