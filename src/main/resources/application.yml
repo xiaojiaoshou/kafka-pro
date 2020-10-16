@@ -3,7 +3,7 @@ server:
 spring:
   kafka:
     bootstrap-servers: 192.168.144.128:9092,192.168.144.130:9092,192.168.144.131:9092  #指定kafka server的地址，集群配多个，中间，逗号隔开
-    listener:
+    #listener:
       # ack-mode:
       #  RECORD: 每处理一条commit一次
       #  BATCH(默认):每次poll的时候批量提交一次，频率取决于每次poll的调用频率
@@ -12,7 +12,7 @@ spring:
       #  COUNT_TIME:ackTime或ackCount哪个条件先满足，就commit
       #  MANUAL:listener负责ack，但是背后也是批量上去
       #  MANUAL_IMMEDIATE:listner负责ack，每调用一次，就立即commit
-      ack-mode: manual
+      #ack-mode: manual
       #生产端配置
     producer:
       #客户端id 用于服务器日志记录
