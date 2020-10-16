@@ -3,9 +3,10 @@ package com.ghx.kafkapro.producer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  *
@@ -22,10 +23,37 @@ public class SequenceProducterController {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-    @RequestMapping("/send/message")
+    /**
+     * 发送同步消息(严格的顺序消息)
+     * @param topic
+     * @param msg
+     * @return
+     */
+    @RequestMapping("/sendSync/message")
     public String send(String topic, String msg) {
-        // 使用kafka模板发送信息
-        ListenableFuture<SendResult<String, Object>> test = kafkaTemplate.send(topic, msg, msg);
-        return "success";
+        String result = "success";
+        try {
+            // 同步发送消息
+            SendResult<String, Object> sendResult =
+                    kafkaTemplate.send(topic, 0, "key", msg).get();
+//            // 同步发送消息（并且耗时限制在1秒）
+//            SendResult<String, Object> sendResult =
+//                    kafkaTemplate.send("topic", "发送同步消息").get(1000, TimeUnit.MICROSECONDS);
+            // 消息发送到的topic
+            topic = sendResult.getRecordMetadata().topic();
+            // 消息发送到的分区
+            int partition = sendResult.getRecordMetadata().partition();
+            // 消息在分区内的offset
+            long offset = sendResult.getRecordMetadata().offset();
+            System.out.println("producer发送消息成功:" +"topic: "+ topic + " partition: " + partition + " offset: " + offset + "\n");
+        } catch (InterruptedException e) {
+            System.out.println("发送消息失败:" + e.getMessage());
+            result = "fail";
+        } catch (ExecutionException e) {
+            System.out.println("发送消息失败:" + e.getMessage());
+            result = "fail";
+        }
+        return result;
     }
+
 }

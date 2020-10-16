@@ -29,4 +29,30 @@ public class ProducterController {
         return "success";
     }
 
+
+    /**
+     * 带回调结果的消息
+     * @param topic
+     * @param msg
+     * @return
+     */
+    @RequestMapping("/sendResult/message")
+    public String sendResult(String topic, String msg) {
+        // 使用kafka模板发送信息
+        ListenableFuture<SendResult<String, Object>> listenableFuture = kafkaTemplate.send(topic, msg, msg);
+        listenableFuture.addCallback(success -> {
+            // 消息发送到的topic
+            String topic1 = success.getRecordMetadata().topic();
+            // 消息发送到的分区
+            int partition = success.getRecordMetadata().partition();
+            // 消息在分区内的offset
+            long offset = success.getRecordMetadata().offset();
+            System.out.println("发送消息成功:" + topic + "-" + partition + "-" + offset);
+
+        }, failure -> {
+            System.out.println("发送消息失败:" + failure.getMessage());
+        });
+        return "success";
+    }
+
 }
