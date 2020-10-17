@@ -2,7 +2,8 @@ server:
   port: 8090
 spring:
   kafka:
-    bootstrap-servers: 192.168.144.128:9092,192.168.144.130:9092,192.168.144.131:9092  #指定kafka server的地址，集群配多个，中间，逗号隔开
+    #指定kafka server的地址，集群配多个，中间，逗号隔开
+    bootstrap-servers: 192.168.144.128:9092,192.168.144.130:9092,192.168.144.131:9092
     #listener:
       # ack-mode:
       #  RECORD: 每处理一条commit一次
