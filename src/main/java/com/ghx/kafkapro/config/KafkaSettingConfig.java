@@ -24,7 +24,7 @@ public class KafkaSettingConfig {
         ConcurrentKafkaListenerContainerFactory factory =
                 new ConcurrentKafkaListenerContainerFactory();
         // kafka的消费端提交交给用户去处理
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.BATCH);
         factory.setConsumerFactory(consumerFactory);
         return factory;
     }
