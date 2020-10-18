@@ -20,7 +20,7 @@ public class ConsumerListener {
      * 定义此消费者接收topics = "test"的消息，与controller中的topic对应上即可
      * @param record 变量代表消息本身，可以通过ConsumerRecord<?,?>类型的record变量来打印接收的消息的各种信息
      */
-    @KafkaListener(topics = "test", groupId = "oms_group")
+   // @KafkaListener(topics = "test", groupId = "oms_group")
     public void listener(ConsumerRecord<?, ?> record) {
         System.out.printf("消费端接收到消序：topic: %s, offset: %d, value ：%s \n", record.topic(), record.offset(), record.value());
     }
@@ -39,7 +39,7 @@ public class ConsumerListener {
      * 定义此消费者接收topics = "test"的消息，与controller中的topic对应上即可
      * @param record 变量代表消息本身，可以通过ConsumerRecord<?,?>类型的record变量来打印接收的消息的各种信息
      */
-    @KafkaListener(containerFactory = "ackContainerFactory", topics = "first",groupId = "oms_group")
+   // @KafkaListener(containerFactory = "ackContainerFactory", topics = "first",groupId = "oms_group")
     public void listenerAck(ConsumerRecord<Object, Object> record, Acknowledgment ack) {
         System.out.printf("消费端接收到消序：topic: %s, offset: %d, value ：%s \n", record.topic(), record.offset(), record.value());
         // 手动提交offset

@@ -7,6 +7,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  *
  * @description:
@@ -52,6 +54,28 @@ public class ProducterController {
         }, failure -> {
             System.out.println("发送消息失败:" + failure.getMessage());
         });
+        return "success";
+    }
+
+
+
+    /**
+     * 带回调结果的消息
+     * @param topic
+     * @param msg
+     * @return
+     */
+    @RequestMapping("/sendSyncResult/message")
+    public String sendSyncResult(String topic, String msg) {
+        // 同步发送消息
+        try {
+            SendResult<String, Object> stringObjectSendResult = kafkaTemplate.send(topic, msg, msg).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
         return "success";
     }
 
