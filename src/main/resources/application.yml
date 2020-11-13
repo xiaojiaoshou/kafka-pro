@@ -55,11 +55,11 @@ spring:
     listener:
       poll-timeout:
     properties:
-      # max.poll.interval.ms默认值是5分钟，处理业务逻辑时间，这个参数需要根据实际业务处理时间进行设置
+      # max.poll.interval.ms(默认值是5分钟)，处理业务逻辑时间，这个参数需要根据实际业务处理时间进行设置
       max:
         poll:
           interval:
-            ms: 50000
+            ms: 300000
       #一次拉取消息得最大字节数默认50M,更改32M(es限制)
       fetch:
         max:
