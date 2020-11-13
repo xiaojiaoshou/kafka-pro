@@ -17,27 +17,28 @@ import org.springframework.kafka.listener.ContainerProperties;
 @Configuration
 public class KafkaListenerConfig {
 
-
     @Bean("autoAckContainerFactory")
-    @Primary
     public ConcurrentKafkaListenerContainerFactory ackAutoContainerFactory(ConsumerFactory consumerFactory) {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
-        // kafka的消费端ack自动处理
+        factory.setBatchListener(true);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.BATCH);
         factory.setConsumerFactory(consumerFactory);
         return factory;
     }
 
-    @Bean("ackContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory ackContainerFactory(ConsumerFactory consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory factory =
-                new ConcurrentKafkaListenerContainerFactory();
-        // kafka的消费端提交交给用户去处理
+    @Bean("ackBatchContainerFactory")
+    @Primary
+    public ConcurrentKafkaListenerContainerFactory ackBatchContainerFactory(ConsumerFactory consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
+        // 并发创建的消费者数量
+        factory.setConcurrency(1);
+        factory.setBatchListener(true);
+        factory.getContainerProperties().setPollTimeout(2000);
+        // 设置提交偏移量的方式,kafka的消费端提交交给用户去处理
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         factory.setConsumerFactory(consumerFactory);
         return factory;
     }
-
 
 
 }
